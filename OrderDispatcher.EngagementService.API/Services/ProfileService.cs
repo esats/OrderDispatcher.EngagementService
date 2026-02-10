@@ -134,6 +134,33 @@ namespace OrderDispatcher.EngagementService.API.Services
             }
         }
 
+        public async Task<List<Profile>> GetStoreProfiles(IReadOnlyCollection<string> userIds)
+        {
+            var response = new List<Profile>();
+
+            try
+            {
+                await using var connection = _db.Database.GetDbConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                var profiles = await connection.QueryAsync<Profile>(
+                              @"SELECT *
+                                      FROM Profiles
+                                      WHERE UserId IN @UserIds",
+                                              new { UserIds = userIds });
+
+
+                return profiles.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<Response<Address>> SaveAddressAsync(AddressSaveModel request, string userId)
         {
             var response = new Response<Address>();

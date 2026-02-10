@@ -50,5 +50,11 @@ namespace OrderDispatcher.EngagementService.API.Controllers
             var userId = GetUser();
             return await _profileService.GetAddressesAsync(userId, ct);
         }
+
+        [HttpPost("getStoresProfile")]
+        public async Task<List<Profile>> GetStoreProfiles(IReadOnlyCollection<string> storeIds)
+        {
+            return await _profileService.GetStoreProfiles(storeIds);
+        }
     }
 }
